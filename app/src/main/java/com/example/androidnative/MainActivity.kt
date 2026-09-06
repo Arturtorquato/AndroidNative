@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,11 +59,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnCadastro.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Tela de cadastro",
-                Toast.LENGTH_SHORT
-            ).show()
+            val intent = Intent(this, CadastroActivity::class.java)
+            startActivity(intent)
         }
     }
 }
