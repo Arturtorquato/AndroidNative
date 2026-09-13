@@ -47,11 +47,12 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         btnPesquisar.setOnClickListener {
-            Toast.makeText(
+            val intent = Intent(
                 this,
-                "Pesquisar registros",
-                Toast.LENGTH_SHORT
-            ).show()
+                PesquisaFiltrosActivity::class.java
+            )
+
+            startActivity(intent)
         }
 
         btnSair.setOnClickListener {
