@@ -1,6 +1,5 @@
 package com.example.androidnative
 import android.content.Intent
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
@@ -38,11 +37,8 @@ class DashboardActivity : AppCompatActivity() {
         val btnSair = findViewById<Button>(R.id.btnSair)
 
         btnLista.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Lista de registros",
-                Toast.LENGTH_SHORT
-            ).show()
+            val intent = Intent(this, ListaRegistrosActivity::class.java)
+            startActivity(intent)
         }
 
         btnCadastrar.setOnClickListener {
