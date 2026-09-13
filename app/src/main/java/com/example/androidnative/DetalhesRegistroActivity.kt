@@ -1,5 +1,6 @@
 package com.example.androidnative
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -62,11 +63,19 @@ class DetalhesRegistroActivity : AppCompatActivity() {
         tvValorQuantidade.text = quantidade.toString()
 
         btnEditar.setOnClickListener {
-            Toast.makeText(
+
+            val intent = Intent(
                 this,
-                "Editar registro",
-                Toast.LENGTH_SHORT
-            ).show()
+                EditarRegistroActivity::class.java
+            )
+
+            intent.putExtra("titulo", titulo)
+            intent.putExtra("descricao", descricao)
+            intent.putExtra("categoria", categoria)
+            intent.putExtra("valor", valor)
+            intent.putExtra("quantidade", quantidade)
+
+            startActivity(intent)
         }
 
         btnExcluir.setOnClickListener {
