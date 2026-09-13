@@ -7,8 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Locale
 
+
 class RegistroAdapter(
-    private var registros: List<Registro>
+    private var registros: List<Registro>,
+    private val onRegistroClick: (Registro) -> Unit
 ) : RecyclerView.Adapter<RegistroAdapter.RegistroViewHolder>() {
 
     class RegistroViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -18,6 +20,8 @@ class RegistroAdapter(
         val tvValor: TextView = itemView.findViewById(R.id.tvItemValor)
         val tvQuantidade: TextView = itemView.findViewById(R.id.tvItemQuantidade)
     }
+
+
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -38,13 +42,20 @@ class RegistroAdapter(
 
         holder.tvTitulo.text = registro.titulo
         holder.tvCategoria.text = "Categoria: ${registro.categoria}"
+
         holder.tvValor.text = String.format(
             Locale("pt", "BR"),
             "Valor: R$ %.2f",
             registro.valor
         )
+
         holder.tvQuantidade.text = "Quantidade: ${registro.quantidade}"
+
+        holder.itemView.setOnClickListener {
+            onRegistroClick(registro)
+        }
     }
+
 
     override fun getItemCount(): Int {
         return registros.size

@@ -29,6 +29,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".DetalhesRegistroActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
 

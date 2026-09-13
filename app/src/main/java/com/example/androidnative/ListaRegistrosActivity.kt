@@ -1,5 +1,6 @@
 package com.example.androidnative
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -90,7 +91,21 @@ class ListaRegistrosActivity : AppCompatActivity() {
             )
         )
 
-        adapter = RegistroAdapter(registros)
+        adapter = RegistroAdapter(registros) { registro ->
+
+            val intent = Intent(
+                this,
+                DetalhesRegistroActivity::class.java
+            )
+
+            intent.putExtra("titulo", registro.titulo)
+            intent.putExtra("descricao", registro.descricao)
+            intent.putExtra("categoria", registro.categoria)
+            intent.putExtra("valor", registro.valor)
+            intent.putExtra("quantidade", registro.quantidade)
+
+            startActivity(intent)
+        }
 
         recyclerRegistros.layoutManager = LinearLayoutManager(this)
         recyclerRegistros.adapter = adapter
