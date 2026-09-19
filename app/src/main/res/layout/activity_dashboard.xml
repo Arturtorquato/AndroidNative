@@ -77,7 +77,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnLista"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="84dp"
         android:text="Cadastrar Registro" />
 
     <Button
@@ -85,8 +85,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnCadastrar"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="Pesquisar" />
+
+    <Button
+        android:id="@+id/btnProcessamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnPesquisar"
+        android:layout_marginTop="10dp"
+        android:text="Processamento de Dados" />
 
     <Button
         android:id="@+id/btnSair"

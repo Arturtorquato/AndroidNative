@@ -58,5 +58,17 @@ class DashboardActivity : AppCompatActivity() {
         btnSair.setOnClickListener {
             finish()
         }
+
+        val btnProcessamento =
+            findViewById<Button>(R.id.btnProcessamento)
+
+        btnProcessamento.setOnClickListener {
+            val intent = Intent(
+                this,
+                ProcessamentoActivity::class.java
+            )
+
+            startActivity(intent)
+        }
     }
 }
