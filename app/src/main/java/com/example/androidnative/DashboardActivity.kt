@@ -70,5 +70,16 @@ class DashboardActivity : AppCompatActivity() {
 
             startActivity(intent)
         }
+
+        val btnGraficos = findViewById<Button>(R.id.btnGraficos)
+
+        btnGraficos.setOnClickListener {
+            val intent = Intent(
+                this,
+                GraficosActivity::class.java
+            )
+
+            startActivity(intent)
+        }
     }
 }

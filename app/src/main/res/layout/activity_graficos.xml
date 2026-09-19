@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".GraficosActivity">
+
+    <LinearLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:text="Gráficos e Resultados"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvSubtitulo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="Comparação entre Android Nativo e React Native"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvSecaoDesempenho"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:text="Desempenho"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvLabelInicializacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Tempo de inicialização"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAndroidInicializacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Android Nativo: 2,8 s" />
+
+        <ProgressBar
+            android:id="@+id/progressAndroidInicializacao"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="65" />
+
+        <TextView
+            android:id="@+id/tvReactInicializacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="React Native: 3,4 s" />
+
+        <ProgressBar
+            android:id="@+id/progressReactInicializacao"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="78" />
+
+        <TextView
+            android:id="@+id/tvLabelRam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="Consumo de memória RAM"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAndroidRam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Android Nativo: 120 MB" />
+
+        <ProgressBar
+            android:id="@+id/progressAndroidRam"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="55" />
+
+        <TextView
+            android:id="@+id/tvReactRam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="React Native: 180 MB" />
+
+        <ProgressBar
+            android:id="@+id/progressReactRam"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="82" />
+
+        <TextView
+            android:id="@+id/tvLabelCpu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="Utilização de CPU"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAndroidCpu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Android Nativo: 35%" />
+
+        <ProgressBar
+            android:id="@+id/progressAndroidCpu"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="35" />
+
+        <TextView
+            android:id="@+id/tvReactCpu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="React Native: 48%" />
+
+        <ProgressBar
+            android:id="@+id/progressReactCpu"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="48" />
+
+        <TextView
+            android:id="@+id/tvSecaoDesenvolvimento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:text="Complexidade de Desenvolvimento"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvLinhasCodigo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Linhas de código"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvValorLinhasCodigo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Android Nativo: 850 linhas" />
+
+        <TextView
+            android:id="@+id/tvTempoDesenvolvimento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Tempo de desenvolvimento"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvValorTempoDesenvolvimento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Android Nativo: 20 horas" />
+
+        <TextView
+            android:id="@+id/tvObservacao"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Observação: os valores apresentados nesta tela são apenas dados demonstrativos e serão substituídos pelos resultados obtidos nos testes."
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btnVoltar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Voltar" />
+
+    </LinearLayout>
+
+</ScrollView>

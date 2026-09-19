@@ -37,6 +37,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".GraficosActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".PesquisaFiltrosActivity"
             android:exported="false" />
 
