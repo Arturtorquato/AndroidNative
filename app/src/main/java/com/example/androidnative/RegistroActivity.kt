@@ -8,8 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class RegistroActivity : AppCompatActivity() {
+
+    private lateinit var registroDao: RegistroDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +36,10 @@ class RegistroActivity : AppCompatActivity() {
             insets
         }
 
+        registroDao = AppDatabase
+            .getDatabase(this)
+            .registroDao()
+
         val edtTitulo = findViewById<EditText>(R.id.edtTitulo)
         val edtDescricao = findViewById<EditText>(R.id.edtDescricao)
         val edtCategoria = findViewById<EditText>(R.id.edtCategoria)
@@ -46,8 +54,8 @@ class RegistroActivity : AppCompatActivity() {
             val titulo = edtTitulo.text.toString().trim()
             val descricao = edtDescricao.text.toString().trim()
             val categoria = edtCategoria.text.toString().trim()
-            val valor = edtValor.text.toString().trim()
-            val quantidade = edtQuantidade.text.toString().trim()
+            val valorTexto = edtValor.text.toString().trim()
+            val quantidadeTexto = edtQuantidade.text.toString().trim()
 
             if (titulo.isEmpty()) {
                 edtTitulo.error = "Digite o título"
@@ -64,23 +72,50 @@ class RegistroActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            if (valor.isEmpty()) {
+            if (valorTexto.isEmpty()) {
                 edtValor.error = "Digite o valor"
                 return@setOnClickListener
             }
 
-            if (quantidade.isEmpty()) {
+            if (quantidadeTexto.isEmpty()) {
                 edtQuantidade.error = "Digite a quantidade"
                 return@setOnClickListener
             }
 
-            Toast.makeText(
-                this,
-                "Registro cadastrado com sucesso",
-                Toast.LENGTH_SHORT
-            ).show()
+            val valor = valorTexto.toDoubleOrNull()
 
-            finish()
+            if (valor == null) {
+                edtValor.error = "Digite um valor válido"
+                return@setOnClickListener
+            }
+
+            val quantidade = quantidadeTexto.toIntOrNull()
+
+            if (quantidade == null) {
+                edtQuantidade.error = "Digite uma quantidade válida"
+                return@setOnClickListener
+            }
+
+            val registro = Registro(
+                titulo = titulo,
+                descricao = descricao,
+                categoria = categoria,
+                valor = valor,
+                quantidade = quantidade
+            )
+
+            lifecycleScope.launch {
+
+                registroDao.inserir(registro)
+
+                Toast.makeText(
+                    this@RegistroActivity,
+                    "Registro cadastrado com sucesso",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                finish()
+            }
         }
 
         btnCancelar.setOnClickListener {

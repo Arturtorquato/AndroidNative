@@ -8,13 +8,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 
 class ListaRegistrosActivity : AppCompatActivity() {
 
     private lateinit var adapter: RegistroAdapter
-    private lateinit var registros: List<Registro>
+    private lateinit var registroDao: RegistroDao
+
+    private var registros = emptyList<Registro>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,64 +44,30 @@ class ListaRegistrosActivity : AppCompatActivity() {
             insets
         }
 
-        val edtPesquisa = findViewById<EditText>(R.id.edtPesquisa)
-        val btnPesquisar = findViewById<Button>(R.id.btnPesquisar)
-        val btnVoltar = findViewById<Button>(R.id.btnVoltar)
+        val edtPesquisa =
+            findViewById<EditText>(R.id.edtPesquisa)
+
+        val btnPesquisar =
+            findViewById<Button>(R.id.btnPesquisar)
+
+        val btnVoltar =
+            findViewById<Button>(R.id.btnVoltar)
+
         val recyclerRegistros =
             findViewById<RecyclerView>(R.id.recyclerRegistros)
 
-        registros = listOf(
-            Registro(
-                "Notebook",
-                "Notebook para desenvolvimento",
-                "Eletrônicos",
-                3500.00,
-                5
-            ),
-            Registro(
-                "Monitor",
-                "Monitor Full HD",
-                "Eletrônicos",
-                1200.00,
-                8
-            ),
-            Registro(
-                "Teclado",
-                "Teclado mecânico",
-                "Periféricos",
-                350.00,
-                15
-            ),
-            Registro(
-                "Mouse",
-                "Mouse sem fio",
-                "Periféricos",
-                180.00,
-                20
-            ),
-            Registro(
-                "Cadeira",
-                "Cadeira para escritório",
-                "Móveis",
-                950.00,
-                7
-            ),
-            Registro(
-                "Mesa",
-                "Mesa para computador",
-                "Móveis",
-                700.00,
-                4
-            )
-        )
+        registroDao = AppDatabase
+            .getDatabase(this)
+            .registroDao()
 
-        adapter = RegistroAdapter(registros) { registro ->
+        adapter = RegistroAdapter(emptyList()) { registro ->
 
             val intent = Intent(
                 this,
                 DetalhesRegistroActivity::class.java
             )
 
+            intent.putExtra("id", registro.id)
             intent.putExtra("titulo", registro.titulo)
             intent.putExtra("descricao", registro.descricao)
             intent.putExtra("categoria", registro.categoria)
@@ -107,21 +77,47 @@ class ListaRegistrosActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        recyclerRegistros.layoutManager = LinearLayoutManager(this)
+        recyclerRegistros.layoutManager =
+            LinearLayoutManager(this)
+
         recyclerRegistros.adapter = adapter
+
+        lifecycleScope.launch {
+
+            registroDao.listar().collect { lista ->
+
+                registros = lista
+
+                adapter.atualizarLista(lista)
+            }
+        }
 
         btnPesquisar.setOnClickListener {
 
-            val texto = edtPesquisa.text.toString().trim()
+            val texto =
+                edtPesquisa.text.toString().trim()
 
             if (texto.isEmpty()) {
+
                 adapter.atualizarLista(registros)
+
                 return@setOnClickListener
             }
 
             val filtrados = registros.filter { registro ->
-                registro.titulo.contains(texto, ignoreCase = true) ||
-                        registro.categoria.contains(texto, ignoreCase = true)
+
+                registro.titulo.contains(
+                    texto,
+                    ignoreCase = true
+                ) ||
+                        registro.categoria.contains(
+                            texto,
+                            ignoreCase = true
+                        ) ||
+                        registro.descricao.contains(
+                            texto,
+                            ignoreCase = true
+                        )
             }
 
             adapter.atualizarLista(filtrados)
