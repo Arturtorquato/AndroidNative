@@ -16,8 +16,46 @@ interface RegistroDao {
     @Query("SELECT * FROM registros ORDER BY id DESC")
     fun listar(): Flow<List<Registro>>
 
+    @Query("SELECT * FROM registros ORDER BY id DESC")
+    suspend fun listarSnapshot(): List<Registro>
+
     @Query("SELECT * FROM registros WHERE id = :id")
     suspend fun buscarPorId(id: Int): Registro?
+
+    @Query(
+        """
+        SELECT * FROM registros
+        WHERE
+            (
+                :texto = ''
+                OR LOWER(titulo) LIKE '%' || LOWER(:texto) || '%'
+                OR LOWER(descricao) LIKE '%' || LOWER(:texto) || '%'
+                OR LOWER(categoria) LIKE '%' || LOWER(:texto) || '%'
+            )
+            AND (
+                :categoria = 'Todas'
+                OR categoria = :categoria
+            )
+            AND (
+                :valorMinimo IS NULL
+                OR valor >= :valorMinimo
+            )
+            AND (
+                :valorMaximo IS NULL
+                OR valor <= :valorMaximo
+            )
+        ORDER BY id DESC
+        """
+    )
+    suspend fun pesquisar(
+        texto: String,
+        categoria: String,
+        valorMinimo: Double?,
+        valorMaximo: Double?
+    ): List<Registro>
+
+    @Query("SELECT COUNT(*) FROM registros")
+    fun contarRegistros(): Flow<Int>
 
     @Update
     suspend fun atualizar(registro: Registro)

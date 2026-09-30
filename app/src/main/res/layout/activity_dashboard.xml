@@ -48,15 +48,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ativos"
+                android:text="Itens"
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/tvAtivos"
+                android:id="@+id/tvItens"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="18"
+                android:text="0"
                 android:textSize="26sp"
                 android:textStyle="bold" />
 

@@ -7,11 +7,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 class ProcessamentoActivity : AppCompatActivity() {
 
-    private lateinit var registros: List<Registro>
+    private lateinit var registroDao: RegistroDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +22,7 @@ class ProcessamentoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_processamento)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
             )
@@ -33,6 +36,10 @@ class ProcessamentoActivity : AppCompatActivity() {
 
             insets
         }
+
+        registroDao = AppDatabase
+            .getDatabase(this)
+            .registroDao()
 
         val btnCalcularTotal =
             findViewById<Button>(R.id.btnCalcularTotal)
@@ -58,83 +65,73 @@ class ProcessamentoActivity : AppCompatActivity() {
         val tvDetalhes =
             findViewById<TextView>(R.id.tvDetalhes)
 
-        registros = listOf(
-            Registro(
-                "Notebook",
-                "Notebook para desenvolvimento",
-                "Eletrônicos",
-                3500.00,
-                5
-            ),
-            Registro(
-                "Monitor",
-                "Monitor Full HD",
-                "Eletrônicos",
-                1200.00,
-                8
-            ),
-            Registro(
-                "Teclado",
-                "Teclado mecânico",
-                "Periféricos",
-                350.00,
-                15
-            ),
-            Registro(
-                "Mouse",
-                "Mouse sem fio",
-                "Periféricos",
-                180.00,
-                20
-            ),
-            Registro(
-                "Cadeira",
-                "Cadeira para escritório",
-                "Móveis",
-                950.00,
-                7
-            ),
-            Registro(
-                "Mesa",
-                "Mesa para computador",
-                "Móveis",
-                700.00,
-                4
-            )
-        )
-
         btnCalcularTotal.setOnClickListener {
 
-            val total = registros.sumOf {
-                it.valor * it.quantidade
-            }
+            lifecycleScope.launch {
 
-            tvResultado.text = "Valor total"
-            tvDetalhes.text = String.format(
-                Locale("pt", "BR"),
-                "R$ %.2f",
-                total
-            )
+                val registros = registroDao.listarSnapshot()
+
+                val total = registros.sumOf {
+                    it.valor * it.quantidade
+                }
+
+                tvResultado.text = "Valor total"
+
+                tvDetalhes.text = String.format(
+                    Locale("pt", "BR"),
+                    "R$ %.2f",
+                    total
+                )
+            }
         }
 
         btnCalcularMedia.setOnClickListener {
 
-            val media = registros.map { it.valor }.average()
+            lifecycleScope.launch {
 
-            tvResultado.text = "Valor médio"
-            tvDetalhes.text = String.format(
-                Locale("pt", "BR"),
-                "R$ %.2f",
-                media
-            )
+                val registros = registroDao.listarSnapshot()
+
+                if (registros.isEmpty()) {
+                    tvResultado.text = "Valor médio"
+                    tvDetalhes.text = "Nenhum registro cadastrado."
+                    return@launch
+                }
+
+                val media = registros
+                    .map { it.valor }
+                    .average()
+
+                tvResultado.text = "Valor médio"
+
+                tvDetalhes.text = String.format(
+                    Locale("pt", "BR"),
+                    "R$ %.2f",
+                    media
+                )
+            }
         }
 
         btnMaiorValor.setOnClickListener {
 
-            val maior = registros.maxByOrNull { it.valor }
+            lifecycleScope.launch {
 
-            if (maior != null) {
+                val registros = registroDao.listarSnapshot()
+
+                val maior = registros.maxByOrNull {
+                    it.valor
+                }
+
+                if (maior == null) {
+
+                    tvResultado.text = "Maior valor"
+                    tvDetalhes.text =
+                        "Nenhum registro cadastrado."
+
+                    return@launch
+                }
+
                 tvResultado.text = "Maior valor"
+
                 tvDetalhes.text = String.format(
                     Locale("pt", "BR"),
                     "%s - R$ %.2f",
@@ -146,58 +143,92 @@ class ProcessamentoActivity : AppCompatActivity() {
 
         btnOrdenar.setOnClickListener {
 
-            val ordenados = registros.sortedByDescending {
-                it.valor
-            }
+            lifecycleScope.launch {
 
-            tvResultado.text = "Registros ordenados"
+                val registros = registroDao.listarSnapshot()
 
-            val resultado = ordenados.joinToString("\n") {
-                String.format(
-                    Locale("pt", "BR"),
-                    "%s - R$ %.2f",
-                    it.titulo,
+                val ordenados = registros.sortedByDescending {
                     it.valor
-                )
-            }
+                }
 
-            tvDetalhes.text = resultado
+                tvResultado.text = "Registros ordenados"
+
+                if (ordenados.isEmpty()) {
+
+                    tvDetalhes.text =
+                        "Nenhum registro cadastrado."
+
+                    return@launch
+                }
+
+                tvDetalhes.text =
+                    ordenados.joinToString("\n") {
+                        String.format(
+                            Locale("pt", "BR"),
+                            "%s - R$ %.2f",
+                            it.titulo,
+                            it.valor
+                        )
+                    }
+            }
         }
 
         btnProcessar.setOnClickListener {
 
-            val total = registros.sumOf {
-                it.valor * it.quantidade
+            lifecycleScope.launch {
+
+                val registros =
+                    registroDao.listarSnapshot()
+
+                if (registros.isEmpty()) {
+
+                    tvResultado.text =
+                        "Processamento"
+
+                    tvDetalhes.text =
+                        "Nenhum registro cadastrado."
+
+                    return@launch
+                }
+
+                val total =
+                    registros.sumOf {
+                        it.valor * it.quantidade
+                    }
+
+                val media =
+                    registros
+                        .map { it.valor }
+                        .average()
+
+                val maior =
+                    registros.maxByOrNull {
+                        it.valor
+                    }
+
+                val quantidadeTotal =
+                    registros.sumOf {
+                        it.quantidade
+                    }
+
+                tvResultado.text =
+                    "Processamento concluído"
+
+                tvDetalhes.text = String.format(
+                    Locale("pt", "BR"),
+                    "Quantidade de registros: %d\n" +
+                            "Quantidade total de itens: %d\n" +
+                            "Valor total: R$ %.2f\n" +
+                            "Valor médio: R$ %.2f\n" +
+                            "Maior registro: %s - R$ %.2f",
+                    registros.size,
+                    quantidadeTotal,
+                    total,
+                    media,
+                    maior?.titulo ?: "Nenhum",
+                    maior?.valor ?: 0.0
+                )
             }
-
-            val media = registros.map {
-                it.valor
-            }.average()
-
-            val maior = registros.maxByOrNull {
-                it.valor
-            }
-
-            val quantidadeTotal = registros.sumOf {
-                it.quantidade
-            }
-
-            tvResultado.text = "Processamento concluído"
-
-            tvDetalhes.text = String.format(
-                Locale("pt", "BR"),
-                "Quantidade de registros: %d\n" +
-                        "Quantidade total de itens: %d\n" +
-                        "Valor total: R$ %.2f\n" +
-                        "Valor médio: R$ %.2f\n" +
-                        "Maior registro: %s - R$ %.2f",
-                registros.size,
-                quantidadeTotal,
-                total,
-                media,
-                maior?.titulo ?: "Nenhum",
-                maior?.valor ?: 0.0
-            )
         }
 
         btnVoltar.setOnClickListener {

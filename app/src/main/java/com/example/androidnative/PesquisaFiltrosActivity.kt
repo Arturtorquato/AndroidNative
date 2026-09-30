@@ -10,10 +10,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class PesquisaFiltrosActivity : AppCompatActivity() {
 
-    private lateinit var registros: List<Registro>
+    private lateinit var registroDao: RegistroDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +23,10 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_pesquisa_filtros)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(
+            findViewById(R.id.main)
+        ) { v, insets ->
+
             val systemBars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
             )
@@ -36,7 +41,13 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
             insets
         }
 
-        val edtPesquisa = findViewById<EditText>(R.id.edtPesquisa)
+        registroDao = AppDatabase
+            .getDatabase(this)
+            .registroDao()
+
+        val edtPesquisa =
+            findViewById<EditText>(R.id.edtPesquisa)
+
         val spinnerCategoria =
             findViewById<Spinner>(R.id.spinnerCategoria)
 
@@ -57,51 +68,6 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
 
         val tvResultado =
             findViewById<TextView>(R.id.tvResultado)
-
-        registros = listOf(
-            Registro(
-                "Notebook",
-                "Notebook para desenvolvimento",
-                "Eletrônicos",
-                3500.00,
-                5
-            ),
-            Registro(
-                "Monitor",
-                "Monitor Full HD",
-                "Eletrônicos",
-                1200.00,
-                8
-            ),
-            Registro(
-                "Teclado",
-                "Teclado mecânico",
-                "Periféricos",
-                350.00,
-                15
-            ),
-            Registro(
-                "Mouse",
-                "Mouse sem fio",
-                "Periféricos",
-                180.00,
-                20
-            ),
-            Registro(
-                "Cadeira",
-                "Cadeira para escritório",
-                "Móveis",
-                950.00,
-                7
-            ),
-            Registro(
-                "Mesa",
-                "Mesa para computador",
-                "Móveis",
-                700.00,
-                4
-            )
-        )
 
         val categorias = listOf(
             "Todas",
@@ -124,49 +90,37 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
 
         btnAplicarFiltros.setOnClickListener {
 
-            val textoPesquisa =
-                edtPesquisa.text.toString().trim()
+            val texto = edtPesquisa.text
+                .toString()
+                .trim()
 
-            val categoriaSelecionada =
+            val categoria =
                 spinnerCategoria.selectedItem.toString()
 
             val valorMinimo =
-                edtValorMinimo.text.toString()
+                edtValorMinimo.text
+                    .toString()
+                    .trim()
                     .toDoubleOrNull()
 
             val valorMaximo =
-                edtValorMaximo.text.toString()
+                edtValorMaximo.text
+                    .toString()
+                    .trim()
                     .toDoubleOrNull()
 
-            val resultados = registros.filter { registro ->
+            lifecycleScope.launch {
 
-                val correspondeTexto =
-                    textoPesquisa.isEmpty() ||
-                            registro.titulo.contains(
-                                textoPesquisa,
-                                ignoreCase = true
-                            )
+                val resultados = registroDao.pesquisar(
+                    texto = texto,
+                    categoria = categoria,
+                    valorMinimo = valorMinimo,
+                    valorMaximo = valorMaximo
+                )
 
-                val correspondeCategoria =
-                    categoriaSelecionada == "Todas" ||
-                            registro.categoria == categoriaSelecionada
-
-                val correspondeValorMinimo =
-                    valorMinimo == null ||
-                            registro.valor >= valorMinimo
-
-                val correspondeValorMaximo =
-                    valorMaximo == null ||
-                            registro.valor <= valorMaximo
-
-                correspondeTexto &&
-                        correspondeCategoria &&
-                        correspondeValorMinimo &&
-                        correspondeValorMaximo
+                tvResultado.text =
+                    "Resultados encontrados: ${resultados.size}"
             }
-
-            tvResultado.text =
-                "Resultados encontrados: ${resultados.size}"
         }
 
         btnLimparFiltros.setOnClickListener {
@@ -177,15 +131,35 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
 
             spinnerCategoria.setSelection(0)
 
-            tvResultado.text =
-                "Resultados encontrados: ${registros.size}"
+            lifecycleScope.launch {
+
+                val resultados = registroDao.pesquisar(
+                    texto = "",
+                    categoria = "Todas",
+                    valorMinimo = null,
+                    valorMaximo = null
+                )
+
+                tvResultado.text =
+                    "Resultados encontrados: ${resultados.size}"
+            }
         }
 
         btnVoltar.setOnClickListener {
             finish()
         }
 
-        tvResultado.text =
-            "Resultados encontrados: ${registros.size}"
+        lifecycleScope.launch {
+
+            val resultados = registroDao.pesquisar(
+                texto = "",
+                categoria = "Todas",
+                valorMinimo = null,
+                valorMaximo = null
+            )
+
+            tvResultado.text =
+                "Resultados encontrados: ${resultados.size}"
+        }
     }
 }
