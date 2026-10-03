@@ -1,5 +1,6 @@
 package com.example.androidnative
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -11,11 +12,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 
 class PesquisaFiltrosActivity : AppCompatActivity() {
 
     private lateinit var registroDao: RegistroDao
+    private lateinit var adapter: RegistroAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +73,26 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
         val tvResultado =
             findViewById<TextView>(R.id.tvResultado)
 
+        val recyclerResultados =
+            findViewById<RecyclerView>(R.id.recyclerResultados)
+
+        adapter = RegistroAdapter(emptyList()) { registro ->
+
+            val intent = Intent(
+                this,
+                DetalhesRegistroActivity::class.java
+            )
+
+            intent.putExtra("id", registro.id)
+
+            startActivity(intent)
+        }
+
+        recyclerResultados.layoutManager =
+            LinearLayoutManager(this)
+
+        recyclerResultados.adapter = adapter
+
         val categorias = listOf(
             "Todas",
             "Eletrônicos",
@@ -118,6 +142,8 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
                     valorMaximo = valorMaximo
                 )
 
+                adapter.atualizarLista(resultados)
+
                 tvResultado.text =
                     "Resultados encontrados: ${resultados.size}"
             }
@@ -140,6 +166,8 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
                     valorMaximo = null
                 )
 
+                adapter.atualizarLista(resultados)
+
                 tvResultado.text =
                     "Resultados encontrados: ${resultados.size}"
             }
@@ -157,6 +185,8 @@ class PesquisaFiltrosActivity : AppCompatActivity() {
                 valorMinimo = null,
                 valorMaximo = null
             )
+
+            adapter.atualizarLista(resultados)
 
             tvResultado.text =
                 "Resultados encontrados: ${resultados.size}"

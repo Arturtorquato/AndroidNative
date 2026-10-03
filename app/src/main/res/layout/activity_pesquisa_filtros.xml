@@ -1,115 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:orientation="vertical"
+    android:padding="24dp"
     tools:context=".PesquisaFiltrosActivity">
 
-    <LinearLayout
-        android:id="@+id/main"
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Pesquisa e Filtros"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edtPesquisa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_marginTop="25dp"
+        android:hint="Pesquisar"
+        android:inputType="text" />
 
-        <TextView
-            android:id="@+id/tvTitulo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="Pesquisa e Filtros"
-            android:textSize="28sp"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tvCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="Categoria"
+        android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edtPesquisa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:hint="Pesquisar por título"
-            android:inputType="text" />
+    <Spinner
+        android:id="@+id/spinnerCategoria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp" />
 
-        <TextView
-            android:id="@+id/tvCategoria"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Categoria"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+    <EditText
+        android:id="@+id/edtValorMinimo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:hint="Valor mínimo"
+        android:inputType="numberDecimal" />
 
-        <Spinner
-            android:id="@+id/spinnerCategoria"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp" />
+    <EditText
+        android:id="@+id/edtValorMaximo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="Valor máximo"
+        android:inputType="numberDecimal" />
 
-        <TextView
-            android:id="@+id/tvValorMinimo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Valor mínimo"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+    <Button
+        android:id="@+id/btnAplicarFiltros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Aplicar Filtros" />
 
-        <EditText
-            android:id="@+id/edtValorMinimo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Ex.: 100"
-            android:inputType="numberDecimal" />
+    <Button
+        android:id="@+id/btnLimparFiltros"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Limpar Filtros" />
 
-        <TextView
-            android:id="@+id/tvValorMaximo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Valor máximo"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tvResultado"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Resultados encontrados: 0"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/edtValorMaximo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Ex.: 5000"
-            android:inputType="numberDecimal" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerResultados"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_registro" />
 
-        <Button
-            android:id="@+id/btnAplicarFiltros"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="Aplicar Filtros" />
+    <Button
+        android:id="@+id/btnVoltar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Voltar" />
 
-        <Button
-            android:id="@+id/btnLimparFiltros"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="Limpar Filtros" />
-
-        <TextView
-            android:id="@+id/tvResultado"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:text="Resultados encontrados: 0"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btnVoltar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Voltar" />
-
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>
