@@ -3,6 +3,7 @@ package com.example.androidnative
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -10,8 +11,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface RegistroDao {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun inserir(registro: Registro)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun inserirTodos(registros: List<Registro>)
 
     @Query("SELECT * FROM registros ORDER BY id DESC")
     fun listar(): Flow<List<Registro>>
@@ -20,33 +24,21 @@ interface RegistroDao {
     suspend fun listarSnapshot(): List<Registro>
 
     @Query("SELECT * FROM registros WHERE id = :id")
-    suspend fun buscarPorId(id: Int): Registro?
+    suspend fun buscarPorId(id: Long): Registro?
 
-    @Query(
-        """
+    @Query("""
         SELECT * FROM registros
-        WHERE
-            (
-                :texto = ''
-                OR LOWER(titulo) LIKE '%' || LOWER(:texto) || '%'
-                OR LOWER(descricao) LIKE '%' || LOWER(:texto) || '%'
-                OR LOWER(categoria) LIKE '%' || LOWER(:texto) || '%'
-            )
-            AND (
-                :categoria = 'Todas'
-                OR categoria = :categoria
-            )
-            AND (
-                :valorMinimo IS NULL
-                OR valor >= :valorMinimo
-            )
-            AND (
-                :valorMaximo IS NULL
-                OR valor <= :valorMaximo
-            )
+        WHERE (
+            :texto = ''
+            OR LOWER(titulo) LIKE '%' || LOWER(:texto) || '%'
+            OR LOWER(descricao) LIKE '%' || LOWER(:texto) || '%'
+            OR LOWER(categoria) LIKE '%' || LOWER(:texto) || '%'
+        )
+        AND (:categoria = 'Todas' OR categoria = :categoria)
+        AND (:valorMinimo IS NULL OR valor >= :valorMinimo)
+        AND (:valorMaximo IS NULL OR valor <= :valorMaximo)
         ORDER BY id DESC
-        """
-    )
+    """)
     suspend fun pesquisar(
         texto: String,
         categoria: String,

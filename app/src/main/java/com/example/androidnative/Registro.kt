@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "registros")
 data class Registro(
 
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
+    val id: Long,
 
     val titulo: String,
     val descricao: String,

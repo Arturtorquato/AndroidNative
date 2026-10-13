@@ -134,5 +134,12 @@ class DashboardActivity : AppCompatActivity() {
         btnSair.setOnClickListener {
             finish()
         }
+
+        val btnTestarApi = findViewById<Button>(R.id.btnTestarApi)
+
+        btnTestarApi.setOnClickListener {
+            val intent = Intent(this, ApiTestActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
