@@ -15,7 +15,7 @@ interface RegistroApiService {
 
     @GET("registros/{id}")
     suspend fun buscarPorId(
-        @Path("id") id: Int
+        @Path("id") id: Long
     ): Response<RegistroResponse>
 
     @POST("registros")
@@ -25,12 +25,12 @@ interface RegistroApiService {
 
     @PUT("registros/{id}")
     suspend fun atualizar(
-        @Path("id") id: Int,
+        @Path("id") id: Long,
         @Body registro: RegistroRequest
     ): Response<RegistroResponse>
 
     @DELETE("registros/{id}")
     suspend fun excluir(
-        @Path("id") id: Int
+        @Path("id") id: Long
     ): Response<Unit>
 }

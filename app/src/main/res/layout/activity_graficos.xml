@@ -123,11 +123,11 @@
             android:progress="0" />
 
         <TextView
-            android:id="@+id/tvOutrasCategorias"
+            android:id="@+id/tvOutro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:text="Outras categorias: 0"
+            android:text="Outro: 0"
             android:textSize="17sp" />
 
         <Button
